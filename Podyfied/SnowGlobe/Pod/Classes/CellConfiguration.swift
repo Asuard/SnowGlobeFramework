@@ -16,4 +16,5 @@ public struct CellConfiguration {
     public var spinRange: CGFloat = 2
     public var velocity: CGFloat = -150
     public var velocityRange: CGFloat = -70.0
+    public init() {}
 }

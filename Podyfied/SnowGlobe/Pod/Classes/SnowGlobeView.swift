@@ -88,8 +88,9 @@ open class SnowGlobeView: UIView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        emitter.emitterSize = CGSize(width: bounds.size.width, height: bounds.size.height)
-        emitter.position = CGPoint(x: bounds.size.width, y: bounds.size.height / 2)
+        emitter.emitterPosition = CGPoint(x: self.frame.size.width/2, y: 5)
+        emitter.emitterSize = CGSize(width: self.frame.size.width, height: 10)
+        emitter.beginTime = CACurrentMediaTime()
     }
     
     open override func willMove(toWindow newWindow: UIWindow?) {

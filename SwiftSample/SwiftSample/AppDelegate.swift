@@ -19,6 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let bounds = application.keyWindow?.bounds
             snowGlobeView = SnowGlobeView(frame: bounds!)
             snowGlobeView?.shakeToSnow = true
+            snowGlobeView?.cellConfiguration.birthRate = 10
+            snowGlobeView?.cellConfiguration.velocity = -20
+            snowGlobeView?.cellConfiguration.velocityRange = 10
             application.keyWindow?.addSubview(snowGlobeView!)
         }
     }

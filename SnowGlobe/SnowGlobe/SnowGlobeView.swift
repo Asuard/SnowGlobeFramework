@@ -24,7 +24,8 @@ open class SnowGlobeView: UIView {
         super.init(coder: aDecoder)
         self.initialSetup()
     }
-
+    
+    public var stopAnimationDuration = 4.0
     //MARK: - Public
     
     /** 
@@ -39,13 +40,10 @@ open class SnowGlobeView: UIView {
         }
     }
     
-    /// When set to true snow fall is ligther, less dense.
-    open var lighterSnowMode: Bool = false {
+    open var cellConfiguration: CellConfiguration = CellConfiguration() {
         didSet {
-            if (oldValue != lighterSnowMode) {
-                emitterCell = SnowGlobeView.newEmitterCell(lighterSnowMode, image: snowFlakeImage)
-                emitter.emitterCells = [emitterCell]
-            }
+            emitterCell = SnowGlobeView.newEmitterCell(image: snowFlakeImage, configuration: cellConfiguration)
+            emitter.emitterCells = [emitterCell]
         }
     }
     
@@ -58,7 +56,7 @@ open class SnowGlobeView: UIView {
             return nil
         }
         set {
-            emitterCell = SnowGlobeView.newEmitterCell(lighterSnowMode, image: newValue)
+            emitterCell = SnowGlobeView.newEmitterCell(image: newValue)
             emitter.emitterCells = [emitterCell]
         }
     }
@@ -133,7 +131,7 @@ open class SnowGlobeView: UIView {
         if emitter.presentation() == nil {
             return
         }
-        let animDuration = 4.0
+        let animDuration = self.stopAnimationDuration
         let anim = CAKeyframeAnimation(keyPath: lifetimeKey)
         anim.values = [emitter.presentation()!.lifetime, emitter.presentation()!.lifetime, 0.0]
         anim.keyTimes = [0.0, 0.5, 1.0]
@@ -162,8 +160,10 @@ open class SnowGlobeView: UIView {
         emitter.emitterShape = kCAEmitterLayerLine
         emitter.renderMode = kCAEmitterLayerOldestLast
         emitter.lifetime = 0
+        cellConfiguration = CellConfiguration()
     }
     
+
     fileprivate func shouldShakeToSnow(_ shakeToSnow: Bool) {
         let motionManager = CMMotionManager.sharedManager
         motionManager.accelerometerUpdateInterval = 0.15
@@ -191,7 +191,7 @@ open class SnowGlobeView: UIView {
         }
     }
     
-    fileprivate class func newEmitterCell(_ slowSnow:Bool = false, image: UIImage? = nil) -> CAEmitterCell {
+    fileprivate class func newEmitterCell(image: UIImage? = nil, configuration: CellConfiguration = CellConfiguration()) -> CAEmitterCell {
         let cell = CAEmitterCell()
         var currentImage = image
         if currentImage == nil {
@@ -199,19 +199,15 @@ open class SnowGlobeView: UIView {
         }
         
         cell.contents = currentImage?.cgImage
-        cell.birthRate = 60
-        cell.lifetime = 25
-        cell.scale = 0.2
-        cell.scaleRange = 0.75
-        cell.spin = 0
-        cell.spinRange = 2
-        cell.velocity = -150
-        cell.velocityRange = -70.0
-        if slowSnow == true {
-            cell.birthRate = 10
-            cell.velocity = -80
-            cell.velocityRange = -40.0
-        }
+        cell.birthRate = configuration.birthRate
+        cell.lifetime = configuration.lifetime
+        cell.scale = configuration.scale
+        cell.scaleRange = configuration.scaleRange
+        cell.spin = configuration.spin
+        cell.spinRange = configuration.spinRange
+        cell.velocity = configuration.velocity
+        cell.velocityRange = configuration.velocityRange
+        
         return cell
     }
     

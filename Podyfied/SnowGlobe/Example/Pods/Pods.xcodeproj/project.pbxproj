@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05BC5719212D8B16007EC111 /* CellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05BC5718212D8B16007EC111 /* CellConfiguration.swift */; };
 		203329F33450C35B9EDD09356348D0BC /* Numbers+Extentios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DD3FE3CB3BA1892041E3969FEDC154 /* Numbers+Extentios.swift */; };
 		22987BDD2F8C81A7F1898B2F3CD983C9 /* Pods-SnowGlobe_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F7778D8DF40585002ABAF4657C10AF51 /* Pods-SnowGlobe_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D0F3415FA0C88DA5DB17735DC8BDC31 /* Pods-SnowGlobe_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 748E27D7FA857EE5E98341F7BD3F07E9 /* Pods-SnowGlobe_Tests-dummy.m */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		051105771FE334B936E9F404C5763A0F /* Pods-SnowGlobe_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SnowGlobe_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		05BC5718212D8B16007EC111 /* CellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellConfiguration.swift; sourceTree = "<group>"; };
 		0AAF21FBA561EFD6E419B200101E2932 /* SnowGlobe-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SnowGlobe-umbrella.h"; sourceTree = "<group>"; };
 		14DECAF6C8457D48E7A590FF341B5B5A /* SleighBells.mp3 */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = audio.mp3; path = SleighBells.mp3; sourceTree = "<group>"; };
 		1E7F3FA8D6356508C486E476BF079C0C /* Pods-SnowGlobe_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SnowGlobe_Example-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				80B3A443BD923A56A60693309DEBB704 /* CMMotionManager+shared.swift */,
 				36DD3FE3CB3BA1892041E3969FEDC154 /* Numbers+Extentios.swift */,
 				23B15FF4246F5F00F4036771FDBF2B31 /* SnowGlobeView.swift */,
+				05BC5718212D8B16007EC111 /* CellConfiguration.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -395,6 +398,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
+				TargetAttributes = {
+					DF5CBA1762183E9378C176902F73A659 = {
+						LastSwiftMigration = 0930;
+					};
+				};
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -457,6 +465,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05BC5719212D8B16007EC111 /* CellConfiguration.swift in Sources */,
 				AD4C39468EEDF863C6958070B77A2B52 /* Pods-SnowGlobe_Example-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -644,6 +653,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 436C1CD8CF98F4AAA05BDD78413761FB /* Pods-SnowGlobe_Example.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -665,6 +675,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -687,6 +698,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F962F851154F175868D040ABA381EF6F /* Pods-SnowGlobe_Example.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -707,6 +719,7 @@
 				PRODUCT_NAME = Pods_SnowGlobe_Example;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";

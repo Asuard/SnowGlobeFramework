@@ -49,7 +49,7 @@ open class SnowGlobeView: UIView {
         }
     }
     
-    open var fastCellConfiguration: FastCellConfiguration = CellConfiguration() {
+    open var fastCellConfiguration: FastCellConfiguration = FastCellConfiguration() {
         didSet {
             createShootingParticle(with: fastCellConfiguration)
         }
@@ -93,7 +93,7 @@ open class SnowGlobeView: UIView {
         particleEmmitter.emitterSize = CGSize(width: self.frame.size.width, height: 10)
         particleEmmitter.emitterShape = kCAEmitterLayerLine
         particleEmmitter.beginTime = CACurrentMediaTime()
-        var cells = []
+        var cells: [CAEmitterCell] = []
         for radian in configuration.radians {
             cells.append(makeShootingCell(with: radian, and: configuration))
         }

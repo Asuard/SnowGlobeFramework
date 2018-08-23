@@ -27,6 +27,7 @@ open class SnowGlobeView: UIView {
     
     public var stopAnimationDuration = 4.0
     
+    
     //MARK: - Public
     
     /** 
@@ -45,6 +46,12 @@ open class SnowGlobeView: UIView {
         didSet {
             emitterCell = SnowGlobeView.newEmitterCell(image: snowFlakeImage, configuration: cellConfiguration)
             emitter.emitterCells = [emitterCell]
+        }
+    }
+    
+    open var fastCellConfiguration: FastCellConfiguration = CellConfiguration() {
+        didSet {
+            createShootingParticle(with: fastCellConfiguration)
         }
     }
     
@@ -80,6 +87,38 @@ open class SnowGlobeView: UIView {
         return SnowGlobeView.frameworkImage(named: "flake2@2x")
     }
     
+    func createShootingParticle(with configuration: FastCellConfiguration) {
+        let particleEmmitter = CAEmitterLayer()
+        particleEmmitter.emitterPosition = CGPoint(x: self.frame.size.width/2, y: 5)
+        particleEmmitter.emitterSize = CGSize(width: self.frame.size.width, height: 10)
+        particleEmmitter.emitterShape = kCAEmitterLayerLine
+        particleEmmitter.beginTime = CACurrentMediaTime()
+        var cells = []
+        for radian in configuration.radians {
+            cells.append(makeShootingCell(with: radian, and: configuration))
+        }
+       
+        particleEmmitter.emitterCells = cells
+        self.layer.addSublayer(particleEmmitter)
+    }
+    
+    func makeShootingCell(with radian: CGFloat, and configuration: FastCellConfiguration) -> CAEmitterCell {
+        let cell = CAEmitterCell()
+        cell.birthRate = configuration.birthRate * Float(arc4random_uniform(1000))/1000
+        cell.lifetime = configuration.lifetime
+        cell.emissionLongitude = radian
+        cell.velocity = configuration.velocity
+        cell.velocityRange = configuration.velocityRange
+        cell.spin = configuration.spin
+        cell.spinRange = configuration.spinRange
+        cell.scale = configuration.scale
+        cell.scaleRange = configuration.scaleRange
+        if let image = configuration.image {
+            cell.contents = image.image(withRotation: -radian+3.14).cgImage
+        }
+        
+        return cell
+    }
     //MARK: -
     
     open override class var layerClass: AnyClass {
@@ -147,7 +186,7 @@ open class SnowGlobeView: UIView {
     /// Queue that recieves accelerometer updates from CMMotionManager
     fileprivate lazy var queue = OperationQueue()
     fileprivate lazy var emitterCell: CAEmitterCell = SnowGlobeView.newEmitterCell()
-    fileprivate var emitter: CAEmitterLayer {  get { return layer as! CAEmitterLayer } }
+    fileprivate var emitter = CAEmitterLayer()
     fileprivate var isAnimating : Bool {
         get { return self.emitter.lifetime == 1.0 }
     }
@@ -159,8 +198,10 @@ open class SnowGlobeView: UIView {
         emitter.emitterCells = [emitterCell]
         emitter.emitterShape = kCAEmitterLayerLine
         emitter.renderMode = kCAEmitterLayerOldestLast
-        emitter.lifetime = 0
+        emitter.lifetime = 1
+        self.layer.addSublayer(emitter)
         cellConfiguration = CellConfiguration()
+        
     }
     
     fileprivate func shouldShakeToSnow(_ shakeToSnow: Bool) {

@@ -210,7 +210,7 @@ open class SnowGlobeView: UIView {
         backgroundColor = UIColor.clear
         autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleHeight]
         isUserInteractionEnabled = false
-        emitter.emitterCells = [emitterCell]
+        emitter.emitterCells = emitterCells
         if let _ = centerPosition {
             emitter.emitterShape = kCAEmitterLayerPoint
         } else {
@@ -282,7 +282,7 @@ open class SnowGlobeView: UIView {
         }
         cell.yAcceleration = configuration.yAcceleration
         cell.scaleSpeed = configuration.scaleSpeed
-        cell.xAcceleration = xAcceleration * (0.7 + CGFloat(arc4random_uniform(1000))/1000)
+        cell.xAcceleration = configuration.xAcceleration * (0.7 + CGFloat(arc4random_uniform(1000))/1000)
         if Float(arc4random_uniform(1000))/1000 >= 0.5 {
             cell.xAcceleration = -cell.xAcceleration
         }

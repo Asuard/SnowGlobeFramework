@@ -14,6 +14,11 @@ private let lifetimeKey = "lifetime"
 open class SnowGlobeView: UIView {
     
     //MARK: - Initializers
+    public init(frame: CGRect, position: CGPoint) {
+        super.init(frame: frame)
+        self.centerPosition = position
+        self.initialSetup()
+    }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,7 +31,7 @@ open class SnowGlobeView: UIView {
     }
     
     public var stopAnimationDuration = 4.0
-    
+    public var centerPosition: CGPoint?
     
     //MARK: - Public
     
@@ -44,8 +49,10 @@ open class SnowGlobeView: UIView {
     
     open var cellConfiguration: CellConfiguration = CellConfiguration() {
         didSet {
-            emitterCell = SnowGlobeView.newEmitterCell(image: snowFlakeImage, configuration: cellConfiguration)
-            emitter.emitterCells = [emitterCell]
+            if let images = snowFlakeImage {
+                emitterCells = images.map { SnowGlobeView.newEmitterCell(image: $0, configuration: cellConfiguration) }
+            }
+            emitter.emitterCells = emitterCells
         }
     }
     
@@ -56,16 +63,20 @@ open class SnowGlobeView: UIView {
     }
     
     /// Snow flake image, recomended size 74 X 74 pixels @2x.
-    open var snowFlakeImage: UIImage? {
+    open var snowFlakeImage: [UIImage]? {
         get {
-            if let image: Any = emitterCell.contents {
-                return UIImage(cgImage: image as! CGImage)
-            }
-            return nil
+            return emitterCells.flatMap({ cell in
+                if let image: Any = cell.contents {
+                    return UIImage(cgImage: image as! CGImage)
+                }
+                return nil
+            })
         }
         set {
-            emitterCell = SnowGlobeView.newEmitterCell(image: newValue)
-            emitter.emitterCells = [emitterCell]
+            if let strongValue = newValue {
+                emitterCells = strongValue.map { SnowGlobeView.newEmitterCell(image: $0) }
+            }
+            emitter.emitterCells = emitterCells
         }
     }
     
@@ -127,8 +138,12 @@ open class SnowGlobeView: UIView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        emitter.emitterPosition = CGPoint(x: self.frame.size.width/2, y: 5)
-        emitter.emitterSize = CGSize(width: self.frame.size.width, height: 10)
+        if let position = centerPosition {
+            emitter.emitterPosition = position
+        } else {
+            emitter.emitterPosition = CGPoint(x: self.frame.size.width/2, y: self.frame.size.height)
+            emitter.emitterSize = CGSize(width: self.frame.size.width, height: 1)
+        }
         emitter.beginTime = CACurrentMediaTime()
     }
     
@@ -185,7 +200,7 @@ open class SnowGlobeView: UIView {
     
     /// Queue that recieves accelerometer updates from CMMotionManager
     fileprivate lazy var queue = OperationQueue()
-    fileprivate lazy var emitterCell: CAEmitterCell = SnowGlobeView.newEmitterCell()
+    fileprivate lazy var emitterCells: [CAEmitterCell] = [SnowGlobeView.newEmitterCell()]
     fileprivate var emitter = CAEmitterLayer()
     fileprivate var isAnimating : Bool {
         get { return self.emitter.lifetime == 1.0 }
@@ -196,7 +211,11 @@ open class SnowGlobeView: UIView {
         autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleHeight]
         isUserInteractionEnabled = false
         emitter.emitterCells = [emitterCell]
-        emitter.emitterShape = kCAEmitterLayerLine
+        if let _ = centerPosition {
+            emitter.emitterShape = kCAEmitterLayerPoint
+        } else {
+            emitter.emitterShape = kCAEmitterLayerLine
+        }
         emitter.renderMode = kCAEmitterLayerOldestLast
         emitter.lifetime = 1
         self.layer.addSublayer(emitter)
@@ -239,7 +258,8 @@ open class SnowGlobeView: UIView {
         }
         
         cell.contents = currentImage?.cgImage
-        cell.birthRate = configuration.birthRate
+        cell.birthRate = configuration.birthRate * Float(arc4random_uniform(1000))/1000
+        
         cell.lifetime = configuration.lifetime
         cell.scale = configuration.scale
         cell.scaleRange = configuration.scaleRange
@@ -247,6 +267,25 @@ open class SnowGlobeView: UIView {
         cell.spinRange = configuration.spinRange
         cell.velocity = configuration.velocity
         cell.velocityRange = configuration.velocityRange
+        if configuration.startPosition != .zero {
+            let yRelativePosition = configuration.startPosition.y/UIScreen.main.bounds.height
+            if yRelativePosition < 0.3 { //Up
+                cell.emissionLongitude = configuration.emissionLongitude * CGFloat(arc4random_uniform(1000))/1000
+            } else if yRelativePosition > 0.7 { //Down
+                cell.emissionLongitude = -configuration.emissionLongitude * CGFloat(arc4random_uniform(1000))/1000
+            } else {
+                cell.emissionLongitude = configuration.emissionLongitude * CGFloat(arc4random_uniform(1000))/1000
+                if Float(arc4random_uniform(1000))/1000 >= 0.5 {
+                    cell.emissionLongitude = -cell.emissionLongitude
+                }
+            }
+        }
+        cell.yAcceleration = configuration.yAcceleration
+        cell.scaleSpeed = configuration.scaleSpeed
+        cell.xAcceleration = xAcceleration * (0.7 + CGFloat(arc4random_uniform(1000))/1000)
+        if Float(arc4random_uniform(1000))/1000 >= 0.5 {
+            cell.xAcceleration = -cell.xAcceleration
+        }
         
         return cell
     }

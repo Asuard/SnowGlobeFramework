@@ -16,5 +16,10 @@ public struct CellConfiguration {
     public var spinRange: CGFloat = 2
     public var velocity: CGFloat = -150
     public var velocityRange: CGFloat = -70.0
+    public var emissionLongitude: CGFloat = 0
+    public var yAcceleration: CGFloat = 0
+    public var xAcceleration: CGFloat = 0
+    public var scaleSpeed: CGFloat = 0
+    public var startPosition: CGPoint = .zero
     public init() {}
 }
